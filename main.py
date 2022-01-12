@@ -1,6 +1,6 @@
 #Calculator
 
-import time
+import os
 
 class Calculator():
 
@@ -21,17 +21,15 @@ class Calculator():
             return b     
         
         def _start_parse(self):
-            def temp_func(line):
-              
+            def temp_func(line: str,numbers:list, plus:list, mult:list):
+                  
                 i = 0
                 while i < len(line):
                     item = line[i]
-                 
-                   
-                  
-                    
                     if ")" == item:     #5+)2*9( #Tamamen bozuk burası           
-                       
+                        bracket_numbers = []
+                        bracket_add = []
+                        bracket_mult = []
                         inside_bracket = ""
                         brackets_count = -1
                         control = False
@@ -46,8 +44,7 @@ class Calculator():
                             elif "(" ==  line[j] and brackets_count == 0 :
                                 if control == False:
                                     c = line[i+1:j]
-                                    print(c)
-                                    self.numbers.append(temp_func(c))
+                                    numbers.append(temp_func(c,bracket_numbers,bracket_mult,bracket_add))
                                     
                                 i = j+1
                                 break
@@ -61,7 +58,7 @@ class Calculator():
                         if i == len(line)-1:
                             x = self.reverse_temp()
                            
-                            self.numbers.append(x)
+                            numbers.append(x)
                             
                             tempc = 0
                             self.temp.clear()
@@ -71,7 +68,7 @@ class Calculator():
                         if self.tempc > 0:
                             
                             x = self.reverse_temp()
-                            self.ekleme(self.addIndex,x)
+                            self.ekleme(plus,x, numbers)
                             
                     elif item == "-":
                         i+=1
@@ -79,7 +76,7 @@ class Calculator():
                             
                             x = -self.reverse_temp()
                         
-                            self.ekleme(self.addIndex,x)
+                            self.ekleme(plus,x, numbers)
                             
                     elif item == "*": 
                         i+=1
@@ -87,7 +84,7 @@ class Calculator():
                             
                             x = self.reverse_temp()
                         
-                        self.ekleme(self.multIndex,x)
+                        self.ekleme(mult,x, numbers)
                         
                     elif item == "/":
                         i+=1
@@ -95,7 +92,7 @@ class Calculator():
                             
                             x = 1/self.reverse_temp()
                             
-                            self.ekleme(self.multIndex,x)
+                            self.ekleme(mult,x, numbers)
                              
                     else :
                         return 0
@@ -106,35 +103,29 @@ class Calculator():
                 
                     
                 result = 0
-               
-               
-               
-                if len(self.multIndex) > 0 :                
-                    n = len(self.multIndex)-1
+                if len(mult) > 0 :                
+                    n = len(mult)-1
                     while n >= 0:
                     
-                        if self.multIndex[n] >= len(self.numbers):
+                        if mult[n] >= len(numbers):
                             return 0
                         else:
-                            self.numbers[self.multIndex[n]-1] *= self.numbers[self.multIndex[n]]
-                            self.numbers[self.multIndex[n]] = 0
-                           
-                            
+                            numbers[mult[n]-1] *= numbers[mult[n]]
+                            numbers[mult[n]] = 0  
                         n -= 1
                     
-                if len(self.numbers) > 1:
-                  
-                     result = sum(self.numbers)      
-                else :
-                    result = self.numbers[0]
+                if len(numbers) > 1:
+                     result = sum(numbers)      
+                elif len(numbers) > 1 and numbers.count(0) == len(numbers)-1 :
+                    result = numbers[0]
                 
-                self.numbers.clear()
+                numbers.clear()
                
                 return result
             
             
             
-            return temp_func(self.line)
+            return temp_func(self.line,self.numbers,self.multIndex,self.addIndex)
         
         
 
@@ -152,22 +143,16 @@ class Calculator():
                 return self.temp[0]
             elif lenght_temp == 0:
                 return 
-        def ekleme(self, operator_list: list, x):
+        def ekleme(self, operator_list: list, x, numbers: list):
             if x != None:
-                numbers_lenght = len(self.numbers)
-                self.numbers.append(x)
+                numbers_lenght = len(numbers)
+                numbers.append(x)
                 operator_list.append(numbers_lenght+1)
                 self.tempc = 0
             elif x == None:
-                numbers_lenght = len(self.numbers)
-                if operator_list == self.multIndex:
-                    x = 1
-                    self.numbers.append(x)
-                elif operator_list == self.addIndex:
-                    x = 0
-                    self.numbers.append(x)
+                numbers_lenght = len(numbers)
               
-                operator_list.append(numbers_lenght+1)
+                operator_list.append(numbers_lenght)
                 
                 self.tempc = 0
             self.temp.clear()
@@ -182,12 +167,18 @@ class Calculator():
         while True:#Ya her şeyi silecek baştan işlem yapacak ya da programdan çıkacak
             self.line = str(a)
             b = str(input(f" = {a}"))    
-            self.line = str(a)+b
-            self.line = self.reversed_line()
-            result = self.parse(self.line)
-            a = result.get_result()
+            if b == "c": #clear
+                os.system('cls||clear')
+            elif b == "q":
+                break
+            else :
+                self.line = str(a)+b
+                self.line = self.reversed_line()
+                result = self.parse(self.line)
+                a = result.get_result()
             #en son bir işlem yapıp devam edebilir işlemlere sonuç üzerinden
-    
+            
+        print("--------------------------")
   
     
     def reversed_line(self):
