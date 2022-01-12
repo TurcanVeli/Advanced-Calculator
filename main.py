@@ -1,10 +1,8 @@
-#Calculater
-# 2+5*3+2   2+3
-# 2 / 6 =  2 * 1/6
-# 6 - 2 =  6 + (-1)*2
+#Calculator
+
 import time
 
-class Calculater():
+class Calculator():
 
     
     class parse():  
@@ -198,5 +196,5 @@ class Calculater():
     def end(self):
         return 
 if "__main__" == __name__:
-    cal = Calculater()
+    cal = Calculator()
     cal.start()
