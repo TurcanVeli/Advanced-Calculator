@@ -18,6 +18,10 @@ class Calculator():
             return b     
         
         def _start_parse(self):
+            # Current index : i
+            # Begin index : index
+            # Temporary i =  tempI                            
+            #inside bracket is a new line of input
             def parsing(line: str,numbers:list, plus:list, mult:list):
                 i = 0
                 while i < len(line):
@@ -31,8 +35,6 @@ class Calculator():
                         brackets_count = -1
                         control = False
                         for j in range(i, len(line)):
-                            
-                            
                             item_br =  line[j]
                             if ")" == item_br:
                                 brackets_count += 1
@@ -41,8 +43,7 @@ class Calculator():
                             elif "(" ==  line[j] and brackets_count == 0 :
                                 if control == False:
                                     c = line[i+1:j]
-                                    numbers.append(parsing(c,bracket_numbers,bracket_mult,bracket_add))
-                                    
+                                    numbers.append(parsing(c,bracket_numbers,bracket_mult,bracket_add))  
                                 i = j+1
                                 break
                                 
@@ -78,13 +79,7 @@ class Calculator():
                         i+=1
                         if self.tempc > 0:
                             x = 1/self.reverse_temp()
-                            self.place_Index(mult,x, numbers)
-                             
-    
-                        # Current index : i
-                        # Begin index : index
-                        # Temporary i =  tempI                            
-                        #inside bracket is a new line of input        
+                            self.place_Index(mult,x, numbers)        
                 
                     
                 result = 0
@@ -137,7 +132,7 @@ class Calculator():
             self.temp.clear()
     
 
-    def __init__(self):
+    def __init__(self):#not necessearly to define any value
         pass
     
     def start(self):
@@ -147,7 +142,7 @@ class Calculator():
             self.line = str(a)
             b = str(input(f" = {a}"))    
             if b == "c": #clear terminal
-                os.system('cls||clear')
+                os.system('cls||clear') #to clear terminal 
             elif b == "q":#quit program
                 break
             else :
@@ -157,7 +152,6 @@ class Calculator():
                 a = result.get_result()
         print("--------------------------")
   
-    
     def reversed_line(self):
         return self.line[::-1]
     
